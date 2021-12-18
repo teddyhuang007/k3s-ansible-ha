@@ -1,0 +1,35 @@
+---
+- name: User | Create User Group
+  group:
+    name: "{{ user.group|default(user.name) }}"
+    system: "{{ user.system|default(omit) }}"
+
+- name: User | Create User
+  user:
+    comment: "{{ user.comment|default(omit) }}"
+    createhome: "{{ user.createhome|default(omit) }}"
+    group: "{{ user.group|default(user.name) }}"
+    home: "{{ user.home|default(omit) }}"
+    shell: "{{ user.shell|default(omit) }}"
+    name: "{{ user.name }}"
+    system: "{{ user.system|default(omit) }}"
+
+- name: User | Add RKE to /etc/sudoers.d/rke
+  copy:
+    content: "rke ALL=(ALL:ALL) NOPASSWD: ALL"
+    dest: /etc/sudoers.d/rke
+    mode: "u=rw,g=,o="
+
+- name: User |Create directory .ssh
+  file:
+    path: /home/rke/.ssh
+    state: directory
+    owner: rke
+    mode: "u=rwx,g=rx,o="
+
+- name: User | Add RKE key to /home/rke/.ssh/authorized_keys
+  copy:
+    content: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFSqejHAUg5MuAQsmXmJXcw/02zG60NnNQPfmCPtTG2F teddy@teddydeMacBook-Pro-2.local"
+    dest: /home/rke/.ssh/authorized_keys
+    owner: rke
+    group: rke
