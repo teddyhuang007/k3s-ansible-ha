@@ -95,7 +95,7 @@
     dest: /home/rke/.kube/config
     remote_src: yes
     owner: rke
-    mode: "u=rw,g=,o="
+    mode: "u=rw,g=r,o=r"
 
 - name: Configure kubectl cluster to https://{{ apiserver_endpoint }}:6443
   command: >-
@@ -119,4 +119,4 @@
 - name: Change file access k3s.yaml
   file:
     path: /etc/rancher/k3s/k3s.yaml
-    mode: "g+r,o+r"
+    mode: "u=rw,g=r,o=r"

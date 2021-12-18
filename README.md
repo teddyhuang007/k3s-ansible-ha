@@ -61,3 +61,20 @@ To get access to your **Kubernetes** cluster just
 ```bash
 scp debian@master_ip:~/.kube/config ~/.kube/config
 ```
+
+## Upgrade 1 mater 1.21.5 to 1.22.2
+
+Upgrade the 1.21.5 to 1.22.2
+
+```bash
+rm /usr/local/bin/k3s
+# Leave the 1 master in the hosts.ini
+ansible ansible-playbook -i inventory/my-cluster/hosts.ini  site.yml
+
+#Add the token and --cluster-init to the k3s.service and restart
+cat /var/lib/rancher/server/token
+k3s server --token xxx::server:xx --no-deploy traefik --docker --cluster-init
+
+# Add the masters to the hosts.ini
+ansible ansible-playbook -i inventory/my-cluster/hosts.ini  site.yml
+```
