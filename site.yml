@@ -1,0 +1,23 @@
+---
+
+- hosts: k3s_cluster
+  gather_facts: yes
+  become: yes
+  roles:
+    - role: adduser
+      user: "{{ addusers.rke }}"
+    - role: prereq
+    - role: sethostname
+    - role: docker
+    - role: download
+    #- role: raspberrypi
+
+- hosts: master
+  become: yes
+  roles:
+    - role: k3s/master
+
+- hosts: node
+  become: yes
+  roles:
+    - role: k3s/node

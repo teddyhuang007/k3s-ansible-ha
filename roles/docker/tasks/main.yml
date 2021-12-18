@@ -1,0 +1,11 @@
+---
+- name: Install docker
+  shell: curl https://releases.rancher.com/install-docker/19.03.sh | sh
+  when:
+    - install_rke_docker
+
+- name: Add RKE to docker group
+  shell: usermod -aG docker rke
+  when:
+    - install_rke_docker
+
