@@ -21,3 +21,14 @@
   become: yes
   roles:
     - role: k3s/node
+
+- hosts: keepalived
+  become: yes
+  roles:
+    - role: keepalived
+
+- hosts: haproxy
+  become: yes
+  roles:
+    - role: haproxy
+

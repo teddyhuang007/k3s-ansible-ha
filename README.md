@@ -26,6 +26,8 @@ Master and nodes must have passwordless SSH access
 
 ## Usage
 
+##Install keepalived before haproxy
+
 First create a new directory based on the `sample` directory within the `inventory` directory:
 
 ```bash
@@ -78,3 +80,4 @@ k3s server --token xxx::server:xx --no-deploy traefik --docker --cluster-init
 # Add the masters to the hosts.ini
 ansible ansible-playbook -i inventory/my-cluster/hosts.ini  site.yml
 ```
+
