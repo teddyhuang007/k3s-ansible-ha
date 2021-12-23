@@ -1,0 +1,10 @@
+# ca-issuer.clusterissuer.yaml
+# 参考：https://cert-manager.io/docs/configuration/ca/
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer ### ClusterIssuer
+metadata:
+  name: ca-issuer
+  namespace: cert-manager ### ClusterIssuer下namespace无效
+spec:
+  ca:
+    secretName: ca-example-com-tls ###
