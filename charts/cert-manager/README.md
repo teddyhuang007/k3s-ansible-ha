@@ -216,3 +216,19 @@ $ helm install my-release -f values.yaml .
 ## Contributing
 
 This chart is maintained at [github.com/jetstack/cert-manager](https://github.com/jetstack/cert-manager/tree/master/deploy/charts/cert-manager).
+
+## Usage
+```console
+$ cd self-signed-demo-nginx
+$ kubectl apply -f selfsigned-issuer.issuer.yaml
+$ kubectl apply -f ca-issuer.clusterissuer.yaml
+$ kubectl apply -f ca-example-com.certificate.cert-manager.yaml
+$ kubectl apply -f example-com.namespace.yaml
+$ kubectl apply -f site-example-com.certificate.example-com.yaml
+$ kubectl apply -f site-example-com.ingress.example-com.yaml
+$ kubectl get secret -ncert-manager ca-example-com-tls -oyaml |grep tls.crt |awk {'print $2'}|base64 -d > ca-tls.crt
+```
+
+import ca-tls.crt to browsers
+![avatar](./img/macbook1.jpg)
+![avatar](./img/macbook2.jpg)
