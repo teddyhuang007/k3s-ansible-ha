@@ -230,5 +230,7 @@ $ kubectl get secret -ncert-manager ca-example-com-tls -oyaml |grep tls.crt |awk
 ```
 
 import ca-tls.crt to browsers
+
 ![avatar](./img/macbook1.jpg)
+
 ![avatar](./img/macbook2.jpg)
