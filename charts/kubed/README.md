@@ -98,6 +98,6 @@ $ helm install kubed appscode/kubed -n kube-system --values values.yaml
 Sync secret or config cross namespaces.
 
 ```console
-kubectl label namespace xxxx "app=kubed"
-kubectl annotate secret/configmap secret/config-name --namespace xxxxx kubed.appscode.com/sync="app=kubed"
+$ kubectl label namespace xxxx "app=kubed"
+$ kubectl annotate secret/configmap secret/config-name --namespace xxxxx kubed.appscode.com/sync="app=kubed"
 ```
