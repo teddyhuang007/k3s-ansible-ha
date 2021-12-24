@@ -231,6 +231,12 @@ $ kubectl get secret -ncert-manager ca-example-com-tls -oyaml |grep tls.crt |awk
 
 import ca-tls.crt to browsers
 
+MAC chrome:
+
 ![avatar](./img/macbook1.jpg)
 
 ![avatar](./img/macbook2.jpg)
+
+Windows chrome:
+
+Settings --> Privacy settings and Security --> Security -> Certs Managerment(HTTPS/SSL) --> Trusted Root Cert facility --> import
