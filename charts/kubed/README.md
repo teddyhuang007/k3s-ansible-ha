@@ -92,3 +92,12 @@ installing the chart. For example:
 ```console
 $ helm install kubed appscode/kubed -n kube-system --values values.yaml
 ```
+
+## Useage
+
+Sync secret or config cross namespaces.
+
+```console
+kubectl label namespace xxxx "app=kubed"
+kubectl annotate secret/configmap secret/config-name --namespace xxxxx kubed.appscode.com/sync="app=kubed"
+```
