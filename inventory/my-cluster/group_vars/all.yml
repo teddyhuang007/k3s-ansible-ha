@@ -4,6 +4,7 @@ ansible_user: ubuntu
 systemd_dir: /etc/systemd/system
 apiserver_endpoint: "{{ hostvars[groups['master'][0]]['ansible_host'] | default(groups['master'][0]) }}"
 apiserver_endpoint_vip: "192.168.56.252"
-k3s_token: "xxxxx::server:xxxxxx"
+external_datastore_endpoint: "postgres://postgres:123456@192.168.56.8:5432" #High Availability with an External DB
+k3s_token: "xxx::server:xxx"
 extra_server_args: "--no-deploy traefik --docker"
 extra_agent_args: "--docker"
