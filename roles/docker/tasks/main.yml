@@ -1,8 +1,21 @@
 ---
-- name: Install docker
-  shell: curl https://releases.rancher.com/install-docker/19.03.sh | sh
+- name: Check docker
+  shell: which docker
+  register: docker_exists
+
+- name: Download docker.sh
+  get_url:
+    url: https://releases.rancher.com/install-docker/19.03.sh
+    dest: /tmp/{{ docker_version  }}.sh
   when:
     - install_rke_docker
+    - (docker_exists.changed) and (docker_exists.rc !=0)
+
+- name: Install docker.sh
+  shell: sh /tmp/{{ docker_version }}.sh
+  when:
+    - install_rke_docker
+    - (docker_exists.changed) and (docker_exists.rc !=0)
 
 - name: Add RKE to docker group
   shell: usermod -aG docker rke

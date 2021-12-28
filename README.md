@@ -53,7 +53,10 @@ If needed, you can also edit `inventory/my-cluster/group_vars/all.yml` to match 
 Start provisioning of the cluster using the following command:
 
 ```bash
-ansible-playbook site.yml -i inventory/my-cluster/hosts.ini
+#Dry-run
+ansible-playbook site.yml -i inventory/my-cluster/hosts.ini -CD
+#Apply changes (if any)
+ansible-playbook site.yml -i inventory/my-cluster/hosts.ini -D
 ```
 
 ## Kubeconfig
@@ -69,7 +72,7 @@ scp debian@master_ip:~/.kube/config ~/.kube/config
 Upgrade the 1.21.5 to 1.22.2
 
 ```bash
-rm /usr/local/bin/k3s
+ansible <HOST-IP> -m asible.builtin.file -a "dest=/usr/local/bin/k3s state=absent"
 # Leave the 1 master in the hosts.ini
 ansible ansible-playbook -i inventory/my-cluster/hosts.ini  site.yml
 
@@ -79,5 +82,10 @@ k3s server --token xxx::server:xx --no-deploy traefik --docker --cluster-init
 
 # Add the masters to the hosts.ini
 ansible ansible-playbook -i inventory/my-cluster/hosts.ini  site.yml
+
+#Swap agent service: Because the worker1 is v1.21.5 and the new cluster can't get the mertics about it, it's using the k3s-agent.service,login the worker1
+systemctl stop k3s-agent
+systemctl disable k3s-agent
+systemctl start k3s-node
 ```
 

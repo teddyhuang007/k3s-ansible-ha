@@ -16,9 +16,10 @@
 
 - name: User | Add RKE to /etc/sudoers.d/rke
   copy:
-    content: "rke ALL=(ALL:ALL) NOPASSWD: ALL"
+    content: |
+      rke ALL=(ALL:ALL) NOPASSWD: ALL
     dest: /etc/sudoers.d/rke
-    mode: "u=rw,g=,o="
+    mode: "u=r,g=r,o="
 
 - name: User |Create directory .ssh
   file:
@@ -29,7 +30,8 @@
 
 - name: User | Add RKE key to /home/rke/.ssh/authorized_keys
   copy:
-    content: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFSqejHAUg5MuAQsmXmJXcw/02zG60NnNQPfmCPtTG2F teddy@teddydeMacBook-Pro-2.local"
+    content: |
+      ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFSqejHAUg5MuAQsmXmJXcw/02zG60NnNQPfmCPtTG2F teddy@teddydeMacBook-Pro-2.local
     dest: /home/rke/.ssh/authorized_keys
     owner: rke
     group: rke
