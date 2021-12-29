@@ -5,8 +5,11 @@
 
 - name: Download docker.sh
   get_url:
-    url: https://releases.rancher.com/install-docker/19.03.sh
-    dest: /tmp/{{ docker_version  }}.sh
+    url: https://releases.rancher.com/install-docker/{{ docker_version }}.sh
+    dest: /tmp/{{ docker_version }}.sh
+    owner: root
+    group: root
+    mode: "u=rwx,g=x,o=x"
   when:
     - install_rke_docker
     - (docker_exists.changed) and (docker_exists.rc !=0)
@@ -17,8 +20,13 @@
     - install_rke_docker
     - (docker_exists.changed) and (docker_exists.rc !=0)
 
+- name: Check if rke is in docker group
+  shell: id -nG rke |grep docker
+  register: rke_in_docker
+
 - name: Add RKE to docker group
   shell: usermod -aG docker rke
   when:
     - install_rke_docker
+    - (rke_in_docker.changed) and (rke_in_docker.rc !=0)
 

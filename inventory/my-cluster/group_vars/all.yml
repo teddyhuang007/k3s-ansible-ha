@@ -1,10 +1,10 @@
 ---
 k3s_version: v1.22.2+k3s2
-ansible_user: ubuntu
+docker_version: 19.03
 systemd_dir: /etc/systemd/system
 apiserver_endpoint: "{{ hostvars[groups['master'][0]]['ansible_host'] | default(groups['master'][0]) }}"
 apiserver_endpoint_vip: "192.168.56.252"
-external_datastore_endpoint: "postgres://postgres:123456@192.168.56.8:5432" #High Availability with an External DB
-k3s_token: "xxx::server:xxx"
+external_datastore_endpoint: ""#"postgres://postgres:123456@192.168.56.8:5432" #High Availability with an External DB
+k3s_token: "dab002a367b6dad911f888d2065acc83"
 extra_server_args: "--no-deploy traefik --docker"
 extra_agent_args: "--docker"

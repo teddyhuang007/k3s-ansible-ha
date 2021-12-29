@@ -1,6 +1,5 @@
 ---
 k3s_server_location: /var/lib/rancher/k3s
-docker_version: 19.03
 server_init_args: >-
   {% if groups['master'] | length > 1 %}
     {% if ansible_host == hostvars[groups['master'][0]]['ansible_host'] | default(groups['master'][0]) %}
@@ -24,7 +23,6 @@ server_k3s_args: >-
     --datastore-endpoint {{ external_datastore_endpoint }} \
   {% endif %}
     --server https://{{ hostvars[groups['master'][0]]['ansible_host'] | default(groups['master'][0]) }}:6443 \
-    --token {{ k3s_token }} \
   {% if apiserver_endpoint_vip != '' %}
     --tls-san {{ apiserver_endpoint_vip }} \
   {% endif %}

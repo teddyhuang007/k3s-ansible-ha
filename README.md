@@ -22,7 +22,7 @@ on processor architecture:
 ## System requirements
 
 Deployment environment must have Ansible 2.4.0+
-Master and nodes must have passwordless SSH access
+Master and nodes must have same sudo password SSH access or passwordless SSH access
 
 ## Usage
 
@@ -53,10 +53,10 @@ If needed, you can also edit `inventory/my-cluster/group_vars/all.yml` to match 
 Start provisioning of the cluster using the following command:
 
 ```bash
-#Dry-run
-ansible-playbook site.yml -i inventory/my-cluster/hosts.ini -CD
-#Apply changes (if any)
-ansible-playbook site.yml -i inventory/my-cluster/hosts.ini -D
+#Dry-run with ssh password and sudo password
+ansible-playbook site.yml -i inventory/my-cluster/hosts.ini -CD -b -k -K
+#Apply changes (if any) with ssh password and sudo password
+ansible-playbook site.yml -i inventory/my-cluster/hosts.ini -D -b -k -K
 ```
 
 ## Kubeconfig
@@ -64,24 +64,24 @@ ansible-playbook site.yml -i inventory/my-cluster/hosts.ini -D
 To get access to your **Kubernetes** cluster just
 
 ```bash
-scp debian@master_ip:~/.kube/config ~/.kube/config
+scp rke@master_ip:~/.kube/config ~/.kube/config
 ```
 
-## Upgrade 1 mater 1.21.5 to 1.22.2
+## Upgrade 1 mater 1.21.5 with Embedded SQLite to 1.22.2 3 masters with Embedded ETCD DB
 
 Upgrade the 1.21.5 to 1.22.2
 
 ```bash
 ansible <HOST-IP> -m asible.builtin.file -a "dest=/usr/local/bin/k3s state=absent"
 # Leave the 1 master in the hosts.ini
-ansible ansible-playbook -i inventory/my-cluster/hosts.ini  site.yml
+ansible ansible-playbook -i inventory/my-cluster/hosts.ini  site.yml -D -b -k -K
 
 #Add the token and --cluster-init to the k3s.service and restart
 cat /var/lib/rancher/server/token
 k3s server --token xxx::server:xx --no-deploy traefik --docker --cluster-init
 
-# Add the masters to the hosts.ini
-ansible ansible-playbook -i inventory/my-cluster/hosts.ini  site.yml
+# Add the other masters to the hosts.ini
+ansible ansible-playbook -i inventory/my-cluster/hosts.ini  site.yml -D -b -k -K
 
 #Swap agent service: Because the worker1 is v1.21.5 and the new cluster can't get the mertics about it, it's using the k3s-agent.service,login the worker1
 systemctl stop k3s-agent
