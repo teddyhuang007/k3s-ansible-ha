@@ -23,12 +23,130 @@
     - role: k3s/node
 
 - hosts: keepalived
-  become: yes
   roles:
-    - role: keepalived
+    - keepalived
+  vars:
+    keepalived_install_method: apt
+    keepalived_version: v2.0.19
+    keepalived_install: keepalived
+    is_ipv6_enabled: false
+    keepalived_options:
+      - name: log-detail
+    keepalived_vrrp_scripts:
+      chk_haproxy:
+        script: '/usr/bin/pgrep haproxy'
+        weight: 2
+        interval: 1
+
+    keepalived_vrrp_instances:
+      VI_1:
+        interface: enp0s3
+        state: MASTER
+        priority: 101
+        virtual_router_id: 51
+
+        authentication:
+          auth_type: PASS
+          auth_pass: '4Apr3C*d'
+
+        virtual_ipaddresses:
+          - '192.168.56.252/24 dev enp0s3 label enp0s3:1'
+          - '192.168.56.251/24 dev enp0s3 label enp0s3:2'
+
+        track_interfaces:
+          - enp0s3 weight 10
+
+        track_scripts:
+          - chk_haproxy
+
+        raw_options:
+          - dont_track_primary
 
 - hosts: haproxy
-  become: yes
   roles:
-    - role: haproxy
+    - haproxy
+  vars:
+    haproxy_listen:
+      - name: stats
+        description: Global statistics
+        bind:
+          - listen: '0.0.0.0:1936'
+        mode: http
+        stats:
+          enable: true
+          uri: /
+          options:
+            - hide-version
+            - show-node
+          admin: if LOCALHOST
+          refresh: 5s
+          auth:
+            - user: admin
+              passwd: 'NqXgKWQ9f9Et'
+
+    haproxy_frontend:
+      - name: api-server
+        description: K8S Api-server traffic
+        bind:
+          - listen: "192.168.56.252:8443"
+        mode: tcp
+        default_backend: apiservers
+      #- name: https
+      #  description: Front-end for all HTTPS traffic
+      #  bind:
+      #    - listen: "{{ ansible_enp0s3['ipv4']['address'] }}:443"
+      #      param:
+      #        - ssl
+      #        - 'crt star-example1-com.pem'
+      #        - 'crt star-example2-com.pem'
+      #  mode: http
+      #  default_backend: webservers
+      #  rspadd:
+      #    - string: 'Strict-Transport-Security:\ max-age=15768000'
+
+    haproxy_backend:
+      - name: apiservers
+        description: Back-end with all api-servers
+        mode: tcp
+        balance: roundrobin
+        server:
+          - name: master1
+            listen: "192.168.56.6:6443"
+            param:
+              - 'maxconn 501'
+              - check
+          - name: master2
+            listen: "192.168.56.7:6443"
+            param:
+              - 'maxconn 502'
+              - check
+          - name: master3
+            listen: "192.168.56.8:6443"
+            param:
+              - 'maxconn 503'
+              - check
+      #
+      # This will execute http checks against different port than server is pointing to.
+      #- name: brokers
+      #  mode: tcp
+      #  balance: first
+      #  option:
+      #    - 'httpchk GET /'
+      #  default_server_params:
+      #    - port 8161
+      #    - inter 2s
+      #    - downinter 5s
+      #    - rise 3
+      #    - fall 2
+      #  server:
+      #    - name: mqtt-1
+      #      listen: "{{ ansible_lo['ipv4']['address'] }}:1883"
+      #      param:
+      #        - check
+      #
+      #    - name: mqtt-2
+      #      listen: "{{ ansible_lo['ipv4']['address'] }}:1883"
+      #      param:
+      #        - check
+      #        - backup
 

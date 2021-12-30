@@ -1,27 +1,22 @@
+# meta file
 ---
-dependencies: []
-
 galaxy_info:
+  namespace: oefenweb
   role_name: haproxy
-  author: geerlingguy
-  description: HAProxy installation and configuration.
-  company: "Midwestern Mac, LLC"
-  license: "license (BSD, MIT)"
-  min_ansible_version: 2.2
+  author: Mischa ter Smitten
+  company: Oefenweb.nl B.V.
+  description: Set up the latest version of HAProxy in Ubuntu systems
+  license: MIT
+  min_ansible_version: 2.9.0
   platforms:
-    - name: EL
-      versions:
-        - 7
-        - 8
     - name: Ubuntu
       versions:
-        - precise
-        - trusty
         - xenial
+        - bionic
+        - focal
   galaxy_tags:
-    - web
+    - system
+    - clustering
     - networking
-    - cloud
-    - haproxy
-    - loadbalancer
-    - http
+    - web
+dependencies: []
