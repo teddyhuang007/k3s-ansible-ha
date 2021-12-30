@@ -1,3 +1,4 @@
+
 # k3s-ansible-ha
 Fork from https://github.com/k3s-io/k3s-ansible
 
@@ -89,3 +90,23 @@ systemctl disable k3s-agent
 systemctl start k3s-node
 ```
 
+## Setup a postgresql DB
+
+```bash
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+sudo apt-get update
+sudo apt-get -y install postgresql-10
+sudo -u postgres psql
+ 
+ALTER USER postgres WITH PASSWORD '123456'; 
+\q
+sudo passwd -d postgres
+sudo -u postgres passwd
+
+sudo vim /etc/postgresql/10/main/postgresql.conf
+listen_addresses = '*'
+sudo vim /etc/postgresql/10/main/pg_hba.conf
+host    all    all    0.0.0.0/0    md5
+sudo systemctl restart postgresql
+```
