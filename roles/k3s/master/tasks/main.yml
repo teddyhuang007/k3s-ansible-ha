@@ -100,7 +100,7 @@
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: "u=rw,g=,o="
-  when: result is successed
+  when: result is succeeded
   ignore_errors: true
 
 - name: Configure kubectl cluster to https://{{ apiserver_endpoint }}:6443
