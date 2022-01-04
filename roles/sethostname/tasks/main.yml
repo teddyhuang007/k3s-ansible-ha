@@ -12,7 +12,9 @@
   set_fact:
     etc_hosts_inventory_block: |-
       {% for item in (groups['k3s_cluster'] + groups['etcd']|default([]) + groups['calico_rr']|default([]))|unique -%}
+      {% if 'access_ip' in hostvars[item] or 'ip' in hostvars[item] or 'ansible_default_ipv4' in hostvars[item] -%}
       {{ item }} {{ hostvars[item]['ansible_hostname'] }}
+      {% endif %}
       {% endfor %}
   delegate_to: localhost
   connection: local
