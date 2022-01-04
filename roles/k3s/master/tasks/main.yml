@@ -25,10 +25,10 @@
 - name: Verification
   block:
     - name: Verify that all nodes actually joined (check k3s-init.service if this fails)
-      command:
-        cmd: k3s kubectl get nodes -l "node-role.kubernetes.io/master=true" -o=jsonpath="{.items[*].metadata.name}"
+      shell: |
+        k3s kubectl get nodes -l "node-role.kubernetes.io/master=true" -owide|grep `hostname`
       register: nodes
-      until: (nodes.rc==0) and ((nodes.stdout.split() | length) == (groups['master'] | length)) #(nodes.changed) and
+      until: nodes.rc==0 #) (nodes.changed) and (#and ((nodes.stdout.split() | length) == (groups['master'] | length))
       retries: 20
       delay: 10
       changed_when: false
@@ -38,6 +38,9 @@
         name: k3s-init
         state: stopped
       failed_when: false
+        #cmd: k3s kubectl get nodes -l "node-role.kubernetes.io/master=true" -o=jsonpath="{.items[*].metadata.name}"
+
+
 
 - name: Copy K3s service file
   register: k3s_service

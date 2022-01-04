@@ -23,6 +23,7 @@
 - name: Check if rke is in docker group
   shell: id -nG rke |grep docker
   register: rke_in_docker
+  ignore_errors: true
 
 - name: Add RKE to docker group
   shell: usermod -aG docker rke
